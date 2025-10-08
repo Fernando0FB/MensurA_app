@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        scannerBtle = new ScannerBtle(this, 10000, -70);
+        scannerBtle = new ScannerBtle(this);
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             BtleUtils.toast(getApplicationContext(), "BLE não suportado");
@@ -64,9 +64,4 @@ public class MainActivity extends BaseActivity {
         Log.e("uaaa", "StartScan do main ta ok");
         scannerBtle.start();
     }
-
-    public void stopScan() {
-        scannerBtle.stop();
-    }
-
 }

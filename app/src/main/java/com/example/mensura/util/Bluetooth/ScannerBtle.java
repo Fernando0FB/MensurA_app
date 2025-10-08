@@ -2,8 +2,9 @@ package com.example.mensura.util.Bluetooth;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
 import android.content.Context;
 import android.util.Log;
 
@@ -16,7 +17,8 @@ public class ScannerBtle {
 
     private MainActivity ma;
 
-    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothLeScanner bluetoothLeScanner;
     private boolean mScanning;
     private Handler mHandler = new Handler() {
         @Override
@@ -35,18 +37,15 @@ public class ScannerBtle {
         }
     };
 
-    private long scanPeriod;
-    private int signalStrength;
+    private long scanPeriod = 10000; //10 segundos
+    private int signalStrength = -70; //RSSI
 
-    public ScannerBtle(MainActivity mainActivity, long scanPeriod, int signalStrength) {
+    public ScannerBtle(MainActivity mainActivity) {
         ma = mainActivity;
-
-        this.scanPeriod = scanPeriod;
-        this.signalStrength = signalStrength;
 
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) ma.getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
+        bluetoothAdapter = bluetoothManager.getAdapter();
     }
 
     public boolean isScanning() {
@@ -55,10 +54,10 @@ public class ScannerBtle {
 
     public void start() {
         Log.e("uaaa", "Entrou no start do scanner");
-        if (!BtleUtils.checkBluetooth(mBluetoothAdapter)) {
+        if (!BtleUtils.checkBluetooth(bluetoothAdapter)) {
             Log.e("uaaa", "Entrou no if do start");
             BtleUtils.requestUserBluetooth(ma);
-            ma.stopScan();
+            scanLeDevice(false);
         }
         else {
             Log.e("uaaa", "Entrou no else do start");
@@ -76,38 +75,50 @@ public class ScannerBtle {
             BtleUtils.toast(ma.getApplicationContext(), "Starting BLE scan...");
 
             mScanning = true;
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
+            bluetoothLeScanner.startScan(scanCallback);
         }
         else {
             mScanning = false;
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            bluetoothLeScanner.stopScan(scanCallback);
         }
     }
 
-    private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
+    private ScanCallback scanCallback = new ScanCallback() {
+        @SuppressLint("MissingPermission")
+        @Override
+        public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) {
+            super.onScanResult(callbackType, result);
+            Log.e("uaaa", "onScanResult: " + result.toString());
 
-                @Override
-                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+            if (result.getDevice() != null && "BT05".equals(result.getDevice().getName())) {
+                BtleUtils.toast(ma.getApplicationContext(), "Dispositivo BT05 encontrado! Tentando conectar...");
+                Log.e("uaaa", "Dispositivo BT05 encontrado! Tentando conectar...");
+                connectToDevice(result.getDevice());
+                stop();
+            }
+        }
 
-                    final int new_rssi = rssi;
-                    if (rssi > signalStrength) {
-                        ma.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                BtleDevice btleDevice = new BtleDevice(device);
-                                btleDevice.setRssi(new_rssi);
-                                if (btleDevice.getName() == "BT05") {
+        @Override
+        public void onBatchScanResults(java.util.List<android.bluetooth.le.ScanResult> results) {
+            super.onBatchScanResults(results);
+            for (android.bluetooth.le.ScanResult result : results) {
+                Log.e("uaaa", "onBatchScanResults: " + result.toString());
+            }
+        }
 
-                                    ma.stopScan();
-                                }
-                                BtleUtils.toast(ma.getApplicationContext(),
-                                        "Dispositivo: " + btleDevice.getName() + " - " + btleDevice.getAdress() +
-                                                " - RSSI: " + btleDevice.getRssi());
-                            }
-                        });
-                    }
-                }
-            };
+        @Override
+        public void onScanFailed(int errorCode) {
+            super.onScanFailed(errorCode);
+            Log.e("uaaa", "onScanFailed: " + errorCode);
+            BtleUtils.toast(ma.getApplicationContext(), "BLE scan failed with code: " + errorCode);
+        }
+    };
 
+    @SuppressLint("MissingPermission")
+    private void connectToDevice(android.bluetooth.BluetoothDevice device) {
+        BtleUtils.toast(ma.getApplicationContext(), "Conectado ao dispositivo: " + device.getName());
+        Log.e("uaaa", "Conectado ao dispositivo: " + device.getName());
+        // Implementar a lógica de conexão aqui
+
+    }
 }
