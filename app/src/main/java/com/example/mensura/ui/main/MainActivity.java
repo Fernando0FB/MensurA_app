@@ -37,8 +37,6 @@ public class MainActivity extends BaseActivity {
             finish();
         }
 
-        Log.e("uaaa", "Começando");
-
         tvWelcome = findViewById(R.id.tvWelcome);
         btnBluetooth = findViewById(R.id.btnBluetooth);
         btnPacientes = findViewById(R.id.btnPacientes);

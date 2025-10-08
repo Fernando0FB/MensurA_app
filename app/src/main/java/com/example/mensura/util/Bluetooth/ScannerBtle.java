@@ -19,6 +19,7 @@ public class ScannerBtle {
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothLeScanner;
+
     private boolean mScanning;
     private Handler mHandler = new Handler() {
         @Override
@@ -46,6 +47,10 @@ public class ScannerBtle {
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) ma.getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
+
+        if (bluetoothAdapter != null) {
+            bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        }
     }
 
     public boolean isScanning() {
@@ -88,8 +93,6 @@ public class ScannerBtle {
         @Override
         public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) {
             super.onScanResult(callbackType, result);
-            Log.e("uaaa", "onScanResult: " + result.toString());
-
             if (result.getDevice() != null && "BT05".equals(result.getDevice().getName())) {
                 BtleUtils.toast(ma.getApplicationContext(), "Dispositivo BT05 encontrado! Tentando conectar...");
                 Log.e("uaaa", "Dispositivo BT05 encontrado! Tentando conectar...");
@@ -116,9 +119,60 @@ public class ScannerBtle {
 
     @SuppressLint("MissingPermission")
     private void connectToDevice(android.bluetooth.BluetoothDevice device) {
-        BtleUtils.toast(ma.getApplicationContext(), "Conectado ao dispositivo: " + device.getName());
-        Log.e("uaaa", "Conectado ao dispositivo: " + device.getName());
-        // Implementar a lógica de conexão aqui
+        device.connectGatt(ma, false, new android.bluetooth.BluetoothGattCallback() {
+            @Override
+            public void onConnectionStateChange(android.bluetooth.BluetoothGatt gatt, int status, int newState) {
+                super.onConnectionStateChange(gatt, status, newState);
 
+                if (status == android.bluetooth.BluetoothGatt.GATT_SUCCESS && newState == android.bluetooth.BluetoothProfile.STATE_CONNECTED) {
+                    boolean result = gatt.discoverServices();
+
+                    BtleUtils.toast(ma.getApplicationContext(), result ? "Conectado ao dispositivo! Descobrindo serviços..." : "Falha ao iniciar descoberta de serviços");
+                } else if (newState == android.bluetooth.BluetoothProfile.STATE_DISCONNECTED) {
+                    gatt.close();
+                }
+            }
+
+            @Override
+            public void onServicesDiscovered(android.bluetooth.BluetoothGatt gatt, int status) {
+                super.onServicesDiscovered(gatt, status);
+                if (status == android.bluetooth.BluetoothGatt.GATT_SUCCESS) {
+                    java.util.UUID SERVICE_UUID = java.util.UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
+                    java.util.UUID CHARACTERISTIC_UUID = java.util.UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
+
+                    // Encontra o serviço FFE0
+                    android.bluetooth.BluetoothGattService service = gatt.getService(SERVICE_UUID);
+                    if (service != null) {
+                        android.bluetooth.BluetoothGattCharacteristic characteristic = service.getCharacteristic(CHARACTERISTIC_UUID);
+                        if (characteristic != null) {
+                            // Habilita notificações para a característica
+                            gatt.setCharacteristicNotification(characteristic, true);
+
+                            android.bluetooth.BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                                    java.util.UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"));
+                            if (descriptor != null) {
+                                descriptor.setValue(android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                                gatt.writeDescriptor(descriptor);
+                            }
+                        } else {
+                            Log.e("uaaa", "Característica FFE1 não encontrada!");
+                        }
+                    } else {
+                        Log.e("uaaa", "Serviço FFE0 não encontrado!");
+                    }
+                } else {
+                    Log.e("uaaa", "Falha ao descobrir serviços: " + status);
+                }
+            }
+
+
+
+            @Override
+            public void onCharacteristicChanged(android.bluetooth.BluetoothGatt gatt, android.bluetooth.BluetoothGattCharacteristic characteristic) {
+                super.onCharacteristicChanged(gatt, characteristic);
+                //TODO tratar o valor recebido da característica e jogar na tela inicial
+                Log.e("uaaa", "Característica alterada: " + characteristic.getStringValue(0));
+            }
+        });
     }
 }

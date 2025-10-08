@@ -25,8 +25,16 @@ public class BtleUtils {
     }
 
     public static void toast(Context context, String message) {
-        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, 0);
-        toast.show();
+        if (context instanceof Activity) {
+            ((Activity) context).runOnUiThread(() -> {
+                Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, 0);
+                toast.show();
+            });
+        } else {
+            Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, 0);
+            toast.show();
+        }
     }
 }
