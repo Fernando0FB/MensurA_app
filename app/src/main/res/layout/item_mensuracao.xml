@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="12dp"
+    android:layout_margin="8dp"
+    android:elevation="2dp">
+
+    <TextView
+        android:id="@+id/tvPaciente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:text="Paciente" />
+
+    <TextView
+        android:id="@+id/tvDescricao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Articulação - Lado (Movimento)" />
+
+    <TextView
+        android:id="@+id/tvPosicao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Posição: Normal" />
+
+    <Button
+        android:id="@+id/btnAnalise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Analisar"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="end"/>
+</LinearLayout>
