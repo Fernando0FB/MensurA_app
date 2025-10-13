@@ -6,9 +6,9 @@
     <include
         android:id="@+id/includeToolbar"
         layout="@layout/toolbar_generic"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardFiltros"
@@ -33,25 +33,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Paciente">
-                <com.google.android.material.textfield.TextInputEditText
 
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtPacienteNome"
-                    android:inputType="textCapCharacters"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:hint="Articulação">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtArticulacao"
-                    android:inputType="textCapCharacters"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:imeOptions="actionSearch"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -64,17 +52,36 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerMensuracoes"
+        android:id="@+id/recyclerPacientes"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="8dp"
         android:clipToPadding="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardFiltros"
+        app:layout_constraintBottom_toTopOf="@id/footer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardFiltros"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="?attr/colorSurface"
+        android:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNovo"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Novo"/>
+    </LinearLayout>
 
     <include layout="@layout/loading_overlay" />
 </androidx.constraintlayout.widget.ConstraintLayout>

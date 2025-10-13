@@ -1,39 +1,98 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@android:color/white"
-    android:padding="12dp"
-    android:layout_margin="8dp"
-    android:elevation="2dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="16dp"
+    app:strokeWidth="0dp">
 
-    <TextView
-        android:id="@+id/tvPaciente"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:text="Paciente" />
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvDescricao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Articulação - Lado (Movimento)" />
+        <!-- Título: Paciente -->
+        <TextView
+            android:id="@+id/tvPaciente"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Paciente"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnAnalise"
+            android:layout_marginEnd="8dp"/>
 
-    <TextView
-        android:id="@+id/tvPosicao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:text="Posição: Normal" />
+        <!-- Botão Ação -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAnalise"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Analisar"
+            app:icon="@drawable/ic_round_insights_24"
+            app:iconPadding="8dp"
+            app:iconGravity="textStart"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <Button
-        android:id="@+id/btnAnalise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Analisar"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="end"/>
-</LinearLayout>
+        <!-- Linha 2: Articulação (Movimento) + Chip de Lado -->
+        <TextView
+            android:id="@+id/tvArticulacaoMov"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Joelho (Flexão)"
+            android:textSize="14sp"
+            android:alpha="0.95"
+            app:layout_constraintTop_toBottomOf="@id/tvPaciente"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/chipLado"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="8dp"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipLado"
+            style="@style/Widget.Material3.Chip.Assist.Elevated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D"
+            app:chipIcon="@drawable/ic_round_accessibility_new_24"
+            app:chipIconTint="?attr/colorOnSurfaceVariant"
+            app:layout_constraintTop_toBottomOf="@id/tvPaciente"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp"/>
+
+        <!-- Linha 3: Posição (Chip) -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPosicao"
+            style="@style/Widget.Material3.Chip.Assist.Elevated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Posição: Normal"
+            app:chipIcon="@drawable/ic_round_accessibility_new_24"
+            app:chipIconTint="?attr/colorOnSurfaceVariant"
+            app:layout_constraintTop_toBottomOf="@id/tvArticulacaoMov"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Linha 4: Metadados (ID + Repetições) -->
+        <TextView
+            android:id="@+id/tvMeta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Repetições: 0"
+            android:textSize="12sp"
+            android:alpha="0.8"
+            app:layout_constraintTop_toBottomOf="@id/chipPosicao"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="2dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

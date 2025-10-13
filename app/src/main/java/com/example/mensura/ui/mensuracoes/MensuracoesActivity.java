@@ -1,7 +1,9 @@
 package com.example.mensura.ui.mensuracoes;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +15,9 @@ import com.example.mensura.data.model.PagedResponse;
 import com.example.mensura.data.network.ApiClient;
 import com.example.mensura.data.network.ApiService;
 import com.example.mensura.ui.base.BaseActivity;
+import com.example.mensura.ui.main.MainActivity;
 import com.example.myapplication.R;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.List;
 
@@ -24,51 +28,72 @@ import retrofit2.Response;
 public class MensuracoesActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
+    private EditText edtPacienteNome, edtArticulacao;
     private String token;
+
+    private MaterialToolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mensuracoes);
 
-        recyclerView = findViewById(R.id.recyclerMensuracoes);
+        recyclerView = findViewById(R.id. recyclerMensuracoes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        edtPacienteNome = findViewById(R.id.edtPacienteNome);
+        edtArticulacao = findViewById(R.id.edtArticulacao);
+        toolbar = findViewById(R.id.includeToolbar);
+
+        findViewById(R.id.btnAplicarFiltros).setOnClickListener(v -> {
+            String pacienteNome = emptyToNull(getTextTrim(edtPacienteNome));
+            String articulacao = emptyToNull(getTextTrim(edtArticulacao));
+            loadMensuracoes(pacienteNome, articulacao, 0, 20); // page,size se quiser
+        });
+
+        toolbar.setNavigationOnClickListener(t -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        });
 
         setLoadingOverlay(findViewById(R.id.loadingOverlay));
 
-        // Pega o token salvo no login
         SharedPreferences prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE);
         token = prefs.getString("JWT_TOKEN", null);
 
-        loadMensuracoes();
+        loadMensuracoes(null, null, 0, 20);
     }
 
-    private void loadMensuracoes() {
+    private static String getTextTrim(EditText e) {
+        CharSequence cs = e.getText();
+        return cs == null ? "" : cs.toString().trim();
+    }
+
+    private static String emptyToNull(String s) { return (s == null || s.isEmpty()) ? null : s; }
+
+    private void loadMensuracoes(String pacienteNome, String articulacao, Integer page, Integer size) {
         showLoading();
 
         ApiService api = ApiClient.getClient().create(ApiService.class);
-        api.getMensuracoes("Bearer " + token).enqueue(new Callback<PagedResponse<MensuracaoDTO>>() {
-            @Override
-            public void onResponse(Call<PagedResponse<MensuracaoDTO>> call, Response<PagedResponse<MensuracaoDTO>> response) {
-                hideLoading();
+        api.getMensuracoes("Bearer " + token, pacienteNome, articulacao, page, size)
+                .enqueue(new Callback<PagedResponse<MensuracaoDTO>>() {
+                    @Override
+                    public void onResponse(Call<PagedResponse<MensuracaoDTO>> call,
+                                           Response<PagedResponse<MensuracaoDTO>> response) {
+                        hideLoading();
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<MensuracaoDTO> lista = response.body().getContent();
+                            recyclerView.setAdapter(new MensuracoesAdapter(lista, id -> buscarAnalise(id)));
+                        } else {
+                            Toast.makeText(MensuracoesActivity.this, "Erro ao carregar mensurações", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-                if (response.isSuccessful() && response.body() != null) {
-                    List<MensuracaoDTO> lista = response.body().getContent();
-
-                    // Passa o callback de clique no botão "Analisar"
-                    MensuracoesAdapter adapter = new MensuracoesAdapter(lista,  id -> buscarAnalise(id));
-                    recyclerView.setAdapter(adapter);
-                } else {
-                    Toast.makeText(MensuracoesActivity.this, "Erro ao carregar mensurações", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PagedResponse<MensuracaoDTO>> call, Throwable t) {
-                hideLoading();
-                Toast.makeText(MensuracoesActivity.this, "Falha: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                    @Override
+                    public void onFailure(Call<PagedResponse<MensuracaoDTO>> call, Throwable t) {
+                        hideLoading();
+                        Toast.makeText(MensuracoesActivity.this, "Falha: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void buscarAnalise(int idMensuracao) {

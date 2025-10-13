@@ -2,6 +2,7 @@ package com.example.mensura.ui.main;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.mensura.ui.base.BaseActivity;
 import com.example.mensura.ui.mensuracoes.MensuracoesActivity;
+import com.example.mensura.ui.pacientes.PacienteListActivity;
 import com.example.mensura.util.Bluetooth.BtleUtils;
 import com.example.mensura.util.Bluetooth.ScannerBtle;
 import com.example.myapplication.R;
@@ -32,26 +34,48 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         scannerBtle = new ScannerBtle(this);
 
+        SharedPreferences prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE);
+
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             BtleUtils.toast(getApplicationContext(), "BLE não suportado");
             finish();
         }
 
         tvWelcome = findViewById(R.id.tvWelcome);
+
+        if (prefs.getString("USER_NAME", null) != null) {
+            String nomeCompleto = prefs.getString("USER_NAME", null);
+            tvWelcome.setText("Bem-vindo, " + nomeCompleto);
+        } else {
+            tvWelcome.setText("Olá Usuário!");
+        }
         btnBluetooth = findViewById(R.id.btnBluetooth);
-        btnPacientes = findViewById(R.id.btnPacientes);
-        btnMedicoes = findViewById(R.id.btnMedicoes);
 
         setLoadingOverlay(findViewById(R.id.loadingOverlay));
 
-        btnMedicoes.setOnClickListener(v -> {
+        findViewById(R.id.btnMedicoes).setOnClickListener(v -> {
             Intent intent = new Intent(this, MensuracoesActivity.class);
             startActivity(intent);
         });
 
+
+        findViewById(R.id.btnPacientes).setOnClickListener(v -> {
+            Intent intent = new Intent(this, PacienteListActivity.class);
+            startActivity(intent);
+        });
+
         btnBluetooth.setOnClickListener(v -> {
-            //TODO entender como funciona a conexão BLE e conectar aqui
             startScan();
+            new android.os.Handler().postDelayed(() -> {
+                if (scannerBtle.isConected()) {
+                    btnBluetooth.setText("Conectado!");
+                    btnBluetooth.setBackgroundColor(getResources().getColor(R.color.grey));
+                    btnBluetooth.setClickable(false);
+                    btnBluetooth.setOnClickListener(v2 -> {
+                        Toast.makeText(this, "Dispositivo já conectado!", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }, 2000);
         });
 
 
@@ -59,7 +83,6 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startScan() {
-        Log.e("uaaa", "StartScan do main ta ok");
         scannerBtle.start();
     }
 }

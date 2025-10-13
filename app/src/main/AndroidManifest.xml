@@ -31,7 +31,9 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.mensura.ui.main.MainActivity" />
+        <activity android:name="com.example.mensura.ui.pacientes.PacienteListActivity" />
         <activity android:name="com.example.mensura.ui.mensuracoes.MensuracoesActivity" />
+        <activity android:name="com.example.mensura.ui.pacientes.PacienteCreateActivity" />
     </application>
 
 </manifest>

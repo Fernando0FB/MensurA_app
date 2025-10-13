@@ -20,7 +20,8 @@ public class ScannerBtle {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothLeScanner;
 
-    private boolean mScanning;
+    private boolean scanning;
+    private boolean connected;
     private Handler mHandler = new Handler() {
         @Override
         public void publish(LogRecord record) {
@@ -54,8 +55,9 @@ public class ScannerBtle {
     }
 
     public boolean isScanning() {
-        return mScanning;
+        return scanning;
     }
+    public boolean isConected() {return connected;}
 
     public void start() {
         Log.e("uaaa", "Entrou no start do scanner");
@@ -76,14 +78,14 @@ public class ScannerBtle {
     @SuppressLint("MissingPermission")
     private void scanLeDevice(final boolean enable) {
         Log.e("uaaa", "scanLeDevice: " + enable);
-        if (enable && !mScanning) {
+        if (enable && !scanning) {
             BtleUtils.toast(ma.getApplicationContext(), "Starting BLE scan...");
 
-            mScanning = true;
+            scanning = true;
             bluetoothLeScanner.startScan(scanCallback);
         }
         else {
-            mScanning = false;
+            scanning = false;
             bluetoothLeScanner.stopScan(scanCallback);
         }
     }
@@ -125,9 +127,7 @@ public class ScannerBtle {
                 super.onConnectionStateChange(gatt, status, newState);
 
                 if (status == android.bluetooth.BluetoothGatt.GATT_SUCCESS && newState == android.bluetooth.BluetoothProfile.STATE_CONNECTED) {
-                    boolean result = gatt.discoverServices();
-
-                    BtleUtils.toast(ma.getApplicationContext(), result ? "Conectado ao dispositivo! Descobrindo serviços..." : "Falha ao iniciar descoberta de serviços");
+                    connected = true;
                 } else if (newState == android.bluetooth.BluetoothProfile.STATE_DISCONNECTED) {
                     gatt.close();
                 }
@@ -154,14 +154,8 @@ public class ScannerBtle {
                                 descriptor.setValue(android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                                 gatt.writeDescriptor(descriptor);
                             }
-                        } else {
-                            Log.e("uaaa", "Característica FFE1 não encontrada!");
                         }
-                    } else {
-                        Log.e("uaaa", "Serviço FFE0 não encontrado!");
                     }
-                } else {
-                    Log.e("uaaa", "Falha ao descobrir serviços: " + status);
                 }
             }
 
