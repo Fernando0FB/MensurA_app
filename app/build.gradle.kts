@@ -50,6 +50,7 @@ dependencies {
 
     // RecyclerView (pra exibir dados)
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation(libs.swiperefreshlayout)
 
     // Testes
     testImplementation(libs.junit)

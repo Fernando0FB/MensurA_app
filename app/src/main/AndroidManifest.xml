@@ -33,6 +33,9 @@
         <activity android:name="com.example.mensura.ui.main.MainActivity" />
         <activity android:name="com.example.mensura.ui.pacientes.PacienteListActivity" />
         <activity android:name="com.example.mensura.ui.mensuracoes.MensuracoesActivity" />
+        <activity android:name="com.example.mensura.ui.newMensuracao.MensuracaoCreateActivity" />
+        <activity android:name="com.example.mensura.ui.newMensuracao.PacienteSelectActivity" />
+        <activity android:name="com.example.mensura.ui.newMensuracao.MensuracaoRunActivity" />
         <activity android:name="com.example.mensura.ui.pacientes.PacienteCreateActivity" />
     </application>
 

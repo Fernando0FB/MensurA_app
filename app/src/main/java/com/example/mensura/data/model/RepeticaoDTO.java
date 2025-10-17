@@ -9,6 +9,7 @@ public class RepeticaoDTO {
     private int serie;
     private String dataHoraRepeticao;
     private String observacoes;
+    private int mensuracaoId;
 
     public int getId() { return id; }
     public int getAnguloInicial() { return anguloInicial; }
@@ -18,4 +19,15 @@ public class RepeticaoDTO {
     public int getSerie() { return serie; }
     public String getDataHoraRepeticao() { return dataHoraRepeticao; }
     public String getObservacoes() { return observacoes; }
+
+    public RepeticaoDTO(int anguloInicial, int anguloFinal, int excursao, int dor, int serie, String dataHoraRepeticao, String observacoes, int mensuracaoId) {
+        this.anguloInicial = anguloInicial;
+        this.anguloFinal = anguloFinal;
+        this.excursao = excursao;
+        this.dor = dor;
+        this.serie = serie;
+        this.dataHoraRepeticao = dataHoraRepeticao;
+        this.observacoes = observacoes;
+        this.mensuracaoId = mensuracaoId;
+    }
 }

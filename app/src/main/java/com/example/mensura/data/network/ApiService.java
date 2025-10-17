@@ -3,6 +3,7 @@ package com.example.mensura.data.network;
 import com.example.mensura.data.model.AnaliseResponse;
 import com.example.mensura.data.model.LoginRequest;
 import com.example.mensura.data.model.LoginResponse;
+import com.example.mensura.data.model.MensuracaoCreateDTO;
 import com.example.mensura.data.model.MensuracaoDTO;
 import com.example.mensura.data.model.PacienteDTO;
 import com.example.mensura.data.model.PagedResponse;
@@ -47,5 +48,11 @@ public interface ApiService {
     Call<PacienteDTO> createPaciente(
             @Header("Authorization") String token,
             @Body PacienteDTO paciente
+    );
+
+    @POST("api/mensuracoes")
+    Call<MensuracaoDTO> createMensuracao(
+            @Header("Authorization") String token,
+            @Body MensuracaoCreateDTO mensuracao
     );
 }

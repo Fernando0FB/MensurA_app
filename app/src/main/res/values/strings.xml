@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">MensurA</string>
+
+    <!-- Adiciona as opções para Articulação -->
+    <string-array name="articulacao_options">
+        <item>JOELHO</item>
+        <item>COTOVELO</item>
+    </string-array>
+
+    <!-- Adiciona as opções para Lado -->
+    <string-array name="lado_options">
+        <item>DIREITO</item>
+        <item>ESQUERDO</item>
+    </string-array>
+
+    <!-- Adiciona as opções para Movimento -->
+    <string-array name="movimento_options">
+        <item>FLEXAO</item>
+        <item>EXTENSAO</item>
+        <item>PRONACAO</item>
+        <item>SUPINACAO</item>
+    </string-array>
 </resources>
