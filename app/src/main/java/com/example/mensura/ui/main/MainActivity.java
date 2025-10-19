@@ -13,12 +13,12 @@ import com.example.mensura.ui.newMensuracao.MensuracaoCreateActivity;
 import com.example.mensura.ui.mensuracoes.MensuracoesActivity;
 import com.example.mensura.ui.newMensuracao.PacienteSelectActivity;
 import com.example.mensura.ui.pacientes.PacienteListActivity;
+import com.example.mensura.util.Bluetooth.BluetoothManager;
 import com.example.mensura.util.Bluetooth.BtleUtils;
 import com.example.mensura.util.Bluetooth.ScannerBtle;
 import com.example.myapplication.R;
 
 public class MainActivity extends BaseActivity {
-    private static final String TAG = "uaaaa";
 
     public static final int REQUEST_ENABLE_BT = 1;
 
@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        scannerBtle = new ScannerBtle(this);
+        scannerBtle =  BluetoothManager.getScannerBtle(this);
 
         SharedPreferences prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE);
 
@@ -103,5 +103,9 @@ public class MainActivity extends BaseActivity {
 
     public void startScan() {
         scannerBtle.start();
+    }
+
+    public ScannerBtle getScannerBtle() {
+        return scannerBtle;
     }
 }

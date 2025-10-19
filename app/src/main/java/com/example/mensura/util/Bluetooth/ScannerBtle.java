@@ -9,28 +9,18 @@ import android.bluetooth.le.ScanCallback;
 import android.content.Context;
 import android.util.Log;
 
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-
 public class ScannerBtle {
 
-    private Context context;  // Aceita qualquer contexto agora, e não depende mais de MainActivity
+    private Context context;
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothLeScanner;
 
     private boolean scanning;
     private boolean connected;
-    private Handler mHandler = new Handler() {
-        @Override public void publish(LogRecord record) {}
-        @Override public void flush() {}
-        @Override public void close() throws SecurityException {}
-    };
 
-    private long scanPeriod = 10000; // 10 segundos
-    private int signalStrength = -70; // RSSI
+    private String deviceName = "";
 
-    // Novo construtor genérico
     public ScannerBtle(Context context) {
         this.context = context;
 
@@ -56,7 +46,9 @@ public class ScannerBtle {
         }
     }
 
-    public void stop() { scanLeDevice(false); }
+    public void stop() {
+        scanLeDevice(false);
+    }
 
     @SuppressLint("MissingPermission")
     private void scanLeDevice(final boolean enable) {
@@ -110,6 +102,7 @@ public class ScannerBtle {
                 if (status == android.bluetooth.BluetoothGatt.GATT_SUCCESS
                         && newState == android.bluetooth.BluetoothProfile.STATE_CONNECTED) {
                     connected = true;
+                    deviceName = "Conectado ao dispositivo: " + device.getName();
                     gatt.discoverServices();
                 } else if (newState == android.bluetooth.BluetoothProfile.STATE_DISCONNECTED) {
                     gatt.close();
@@ -135,31 +128,40 @@ public class ScannerBtle {
                                 descriptor.setValue(android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                                 gatt.writeDescriptor(descriptor);
                             }
+
+                            gatt.readCharacteristic(characteristic);
                         }
                     }
                 }
             }
 
             @Override
-            public void onCharacteristicChanged(android.bluetooth.BluetoothGatt gatt,
-                                                android.bluetooth.BluetoothGattCharacteristic characteristic) {
+            public void onCharacteristicChanged(android.bluetooth.BluetoothGatt gatt, android.bluetooth.BluetoothGattCharacteristic characteristic) {
                 super.onCharacteristicChanged(gatt, characteristic);
-                if (onLeituraCallback != null) {
-                    onLeituraCallback.onLeitura(characteristic.getFloatValue(android.bluetooth.BluetoothGattCharacteristic.FORMAT_FLOAT, 0));
+                String data = characteristic.getStringValue(0);
+
+                // Vamos supor que o dado seja uma string codificada em UTF-8
+                if (data != null) {
+                    // Verifique se o callback está realmente registrado
+                    if (onLeituraCallback != null) {
+                        onLeituraCallback.onLeitura(data);
+                    }
                 }
             }
         });
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
 
-    public boolean isScanning() { return scanning; }
-    public boolean isConnected() { return connected; }
+    public interface OnLeituraCallback {
+        void onLeitura(String angulo);
+    }
 
-    public interface OnLeituraCallback { void onLeitura(float angulo); }
     private OnLeituraCallback onLeituraCallback;
 
     public void setOnLeituraCallback(OnLeituraCallback callback) {
-        Log.e("debug", "setOnLeituraAqui");
         this.onLeituraCallback = callback;
     }
 }

@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mensura.data.model.RepeticaoDTO;
+import com.example.mensura.util.Bluetooth.BluetoothManager;
 import com.example.mensura.util.Bluetooth.ScannerBtle;
 import com.example.myapplication.R;
 
@@ -25,7 +26,7 @@ import java.util.List;
 
 public class MensuracaoRunActivity extends AppCompatActivity {
 
-    private TextView tvPaciente, tvAngulo, tvExcursao, tvDor;
+    private TextView tvPaciente, tvAngulo, tvMenorAngulo, tvMaiorAngulo, tvExcursao, tvDor;
     private EditText edtObservacoes;
     private Button btnFinalizarRepeticao, btnFinalizarMensuracao;
     private ProgressBar progress;
@@ -35,7 +36,6 @@ public class MensuracaoRunActivity extends AppCompatActivity {
     private String pacienteNome;
     private int serieAtual = 1;
     private float anguloInicial = Float.MAX_VALUE, anguloFinal = Float.MIN_VALUE, excursao = 0;
-    private boolean isLeituraEmCurso = false;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -45,6 +45,8 @@ public class MensuracaoRunActivity extends AppCompatActivity {
 
         tvPaciente = findViewById(R.id.tvPaciente);
         tvAngulo = findViewById(R.id.tvAngulo);
+        tvMenorAngulo = findViewById(R.id.tvMenorAngulo);
+        tvMaiorAngulo = findViewById(R.id.tvMaiorAngulo);
         tvExcursao = findViewById(R.id.tvExcursao);
         tvDor = findViewById(R.id.tvDor);
         edtObservacoes = findViewById(R.id.edtObservacoes);
@@ -56,49 +58,62 @@ public class MensuracaoRunActivity extends AppCompatActivity {
         pacienteNome = getIntent().getStringExtra("PACIENTE_NOME");
 
         tvPaciente.setText("Paciente: " + pacienteNome);
-        scannerBtle = new ScannerBtle(this);
+        scannerBtle = BluetoothManager.getScannerBtle(this);
 
         repeticoes = new ArrayList<>();
 
-        btnFinalizarRepeticao.setOnClickListener(v -> finalizarRepeticao());
-        btnFinalizarMensuracao.setOnClickListener(v -> finalizarMensuracao());
-
-        // Inicia a leitura BLE
-        Log.e("debug", "Lendo?...");
-
-        // Inicializando o callback corretamente
         scannerBtle.setOnLeituraCallback(angulo -> {
-            // Atualiza os valores com o angulo recebido
-            Log.e("debug", "Leitura de angulo: " + angulo);
-            atualizarLeitura(angulo);
+            try {
+                float anguloFloat = Float.parseFloat(angulo);
+                atualizarLeitura(anguloFloat);
+            } catch (NumberFormatException e) {
+
+            }
         });
 
-        iniciarLeitura();
+        btnFinalizarRepeticao.setOnClickListener(v -> finalizarRepeticao());
+        btnFinalizarMensuracao.setOnClickListener(v -> finalizarMensuracao());
     }
 
     private void iniciarLeitura() {
-        // Inicia o scanner BLE
-        scannerBtle.start();
         Log.e("debug", "Iniciando leitura...");
     }
 
     private void atualizarLeitura(float angulo) {
-        // Atualiza angulo inicial e final
-        Log.e("debug", "angulo: " + angulo);
-        if (angulo < anguloInicial) anguloInicial = angulo;
-        if (angulo > anguloFinal) anguloFinal = angulo;
+        runOnUiThread(() -> {
+            Log.e("debug", "angulo: " + angulo);
 
-        // Calcula a excursão (diferença entre os ângulos)
-        excursao = anguloFinal - anguloInicial;
+            // Verificando se o novo ângulo é menor que o inicial
+            if (angulo < anguloInicial) {
+                String text = "Menor Angulo: " + angulo;
+                Log.e("debug", text);
+                tvMenorAngulo.setText(text);
+                anguloInicial = angulo;
+            }
 
-        // Atualiza os textos
-        tvAngulo.setText("Angulo Atual: " + angulo);
-        tvExcursao.setText("Excursão: " + excursao);
+            // Verificando se o novo ângulo é maior que o final
+            if (angulo > anguloFinal) {
+                String text = "Maior Angulo: " + angulo;
+                Log.e("debug", text);
+                tvMaiorAngulo.setText(text);
+                anguloFinal = angulo;
+            }
+
+            // Atualizando a excursão (diferença entre ângulo final e inicial)
+            excursao = anguloFinal - anguloInicial;
+            String text = "Angulo Atual: " + angulo;
+            Log.e("debug", text);
+            tvAngulo.setText(text);
+
+            // Atualizando excursão
+            String text1 = "Excursão: " + excursao;
+            Log.e("debug", text1);
+            tvExcursao.setText(text1);
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void finalizarRepeticao() {
-        // Aqui, o usuário terminou a repetição
         String observacoes = edtObservacoes.getText().toString();
         RepeticaoDTO repeticao = new RepeticaoDTO(
                 (int) anguloInicial,
@@ -112,31 +127,24 @@ public class MensuracaoRunActivity extends AppCompatActivity {
         );
         repeticoes.add(repeticao);
 
-        // Mostra a opção de continuar ou finalizar a mensuração
         Toast.makeText(this, "Repetição " + repeticao.getSerie() + " finalizada.", Toast.LENGTH_SHORT).show();
 
-        // Limpa os campos para a próxima repetição
         anguloInicial = Float.MAX_VALUE;
         anguloFinal = Float.MIN_VALUE;
         excursao = 0;
         edtObservacoes.setText("");
 
-        // Pergunta ao usuário se quer continuar ou finalizar
         if (repeticoes.size() >= 5) {
             btnFinalizarMensuracao.setVisibility(View.VISIBLE); // Exibe a opção de finalizar mensuração
         } else {
-            // Continuar a próxima repetição
             iniciarLeitura();
         }
     }
 
     private void finalizarMensuracao() {
-        // Finaliza a mensuração, envia os dados e vai para a tela de conclusão
         Toast.makeText(this, "Mensuração finalizada.", Toast.LENGTH_SHORT).show();
 
-        // Aqui você pode salvar os dados no servidor ou na base local
 
-        // Vai para a próxima tela
         Intent intent = new Intent(this, ConclusaoActivity.class);
         startActivity(intent);
         finish();
