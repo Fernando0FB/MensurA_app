@@ -106,10 +106,7 @@ public class PacientesAdapter extends RecyclerView.Adapter<PacientesAdapter.VH> 
 
         VH(@NonNull View itemView) {
             super(itemView);
-            nomePaciente = itemView.findViewById(R.id.nomePaciente);
-            cpfPaciente = itemView.findViewById(R.id.cpfPaciente);
-            dataNascimentoPaciente = itemView.findViewById(R.id.dataNascimentoPaciente);
-            idadePaciente = itemView.findViewById(R.id.idadePaciente);
+            //TODO fazer os dados aqui
 
             // Ajuda a detectar R/layout errado na hora:
             if (nomePaciente == null || cpfPaciente == null ||

@@ -8,5 +8,5 @@ public class LoginResponse {
         return token;
     }
 
-    public String getNomeCompleto() { return nomeCompleto; }
+    public String getNome() { return nomeCompleto; }
 }

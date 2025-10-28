@@ -11,6 +11,7 @@ public class PacienteDTO {
     private String dataNascimento;
     private String sexo;
     private String observacoes;
+    private Long quantidadeMensuracoes;
 
     public int getId() {
         return id;
@@ -74,5 +75,12 @@ public class PacienteDTO {
 
     public void setObservacoes(String observacoes) {
         this.observacoes = observacoes;
+    }
+
+    public Long getQuantidadeMensuracoes() {
+        return quantidadeMensuracoes;
+    }
+    public void setQuantidadeMensuracoes(Long quantidadeMensuracoes) {
+        this.quantidadeMensuracoes = quantidadeMensuracoes;
     }
 }

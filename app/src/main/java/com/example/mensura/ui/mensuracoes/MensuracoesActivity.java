@@ -42,17 +42,11 @@ public class MensuracoesActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         edtPacienteNome = findViewById(R.id.edtPacienteNome);
         edtArticulacao = findViewById(R.id.edtArticulacao);
-        toolbar = findViewById(R.id.includeToolbar);
 
         findViewById(R.id.btnAplicarFiltros).setOnClickListener(v -> {
             String pacienteNome = emptyToNull(getTextTrim(edtPacienteNome));
             String articulacao = emptyToNull(getTextTrim(edtArticulacao));
             loadMensuracoes(pacienteNome, articulacao, 0, 20); // page,size se quiser
-        });
-
-        toolbar.setNavigationOnClickListener(t -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
         });
 
         setLoadingOverlay(findViewById(R.id.loadingOverlay));

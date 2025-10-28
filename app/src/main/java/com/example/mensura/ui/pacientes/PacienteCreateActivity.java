@@ -44,13 +44,6 @@ public class PacienteCreateActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paciente_create);
 
-        // Toolbar
-        MaterialToolbar toolbar = findViewById(R.id.includeToolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            if (getSupportActionBar() != null) getSupportActionBar().setTitle("Novo Paciente");
-            toolbar.setNavigationOnClickListener(v -> finish());
-        }
 
         // Overlay
         setLoadingOverlay(findViewById(R.id.loadingOverlay));

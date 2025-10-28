@@ -8,4 +8,12 @@ public class LoginRequest {
         this.login = login;
         this.senha = senha;
     }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
 }

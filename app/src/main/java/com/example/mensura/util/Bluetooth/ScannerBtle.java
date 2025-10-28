@@ -3,6 +3,7 @@ package com.example.mensura.util.Bluetooth;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -12,14 +13,12 @@ import android.util.Log;
 public class ScannerBtle {
 
     private Context context;
-
+    private BluetoothGatt bluetoothGatt;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothLeScanner;
 
     private boolean scanning;
     private boolean connected;
-
-    private String deviceName = "";
 
     public ScannerBtle(Context context) {
         this.context = context;
@@ -52,9 +51,7 @@ public class ScannerBtle {
 
     @SuppressLint("MissingPermission")
     private void scanLeDevice(final boolean enable) {
-        Log.e("uaaa", "scanLeDevice: " + enable);
         if (enable && !scanning) {
-            BtleUtils.toast(context, "Starting BLE scan...");
             scanning = true;
             bluetoothLeScanner.startScan(scanCallback);
         } else {
@@ -69,8 +66,6 @@ public class ScannerBtle {
         public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) {
             super.onScanResult(callbackType, result);
             if (result.getDevice() != null && "BT05".equals(result.getDevice().getName())) {
-                BtleUtils.toast(context, "Dispositivo BT05 encontrado! Tentando conectar...");
-                Log.e("uaaa", "Dispositivo BT05 encontrado! Tentando conectar...");
                 connectToDevice(result.getDevice());
                 stop();
             }
@@ -94,7 +89,7 @@ public class ScannerBtle {
 
     @SuppressLint("MissingPermission")
     private void connectToDevice(android.bluetooth.BluetoothDevice device) {
-        device.connectGatt(context, false, new android.bluetooth.BluetoothGattCallback() {
+        bluetoothGatt = device.connectGatt(context, false, new android.bluetooth.BluetoothGattCallback() {
             @Override
             public void onConnectionStateChange(android.bluetooth.BluetoothGatt gatt, int status, int newState) {
                 super.onConnectionStateChange(gatt, status, newState);
@@ -102,10 +97,11 @@ public class ScannerBtle {
                 if (status == android.bluetooth.BluetoothGatt.GATT_SUCCESS
                         && newState == android.bluetooth.BluetoothProfile.STATE_CONNECTED) {
                     connected = true;
-                    deviceName = "Conectado ao dispositivo: " + device.getName();
                     gatt.discoverServices();
                 } else if (newState == android.bluetooth.BluetoothProfile.STATE_DISCONNECTED) {
                     gatt.close();
+                    bluetoothGatt = null;
+                    connected = false;
                 }
             }
 
@@ -140,9 +136,7 @@ public class ScannerBtle {
                 super.onCharacteristicChanged(gatt, characteristic);
                 String data = characteristic.getStringValue(0);
 
-                // Vamos supor que o dado seja uma string codificada em UTF-8
                 if (data != null) {
-                    // Verifique se o callback está realmente registrado
                     if (onLeituraCallback != null) {
                         onLeituraCallback.onLeitura(data);
                     }
@@ -151,8 +145,20 @@ public class ScannerBtle {
         });
     }
 
+
     public boolean isConnected() {
         return connected;
+    }
+
+    @SuppressLint("MissingPermission")
+    public boolean disconnect() {
+        if (connected && bluetoothGatt != null) {
+            bluetoothGatt.disconnect();
+            bluetoothGatt.close();
+            connected = false;
+            return true;
+        }
+        return false;
     }
 
     public interface OnLeituraCallback {

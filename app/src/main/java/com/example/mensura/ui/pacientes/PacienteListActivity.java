@@ -30,32 +30,23 @@ import retrofit2.Response;
 public class PacienteListActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
-    private EditText edtPacienteNome;
     private String token;
 
-    private MaterialToolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pacienteslist);
 
-        recyclerView = findViewById(R.id.recyclerPacientes);
+        //TODO ver para adicionar a filtragem com base no nome do paciente digitado
+        recyclerView = findViewById(R.id.rvPacientes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        edtPacienteNome = findViewById(R.id.edtPacienteNome);
-        toolbar = findViewById(R.id.includeToolbar);
 
-        findViewById(R.id.btnAplicarFiltros).setOnClickListener(v -> {
-            String pacienteNome = emptyToNull(getTextTrim(edtPacienteNome));
-            loadPacientes(pacienteNome, 0, 20); // page,size se quiser
-        });
+        //TODO validar o scroll infinito das infos. se caso tiver mais do que 20 infos, como que vai funcionar o scroll?
 
-        toolbar.setNavigationOnClickListener(t -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        });
+        //TODO Botão de voltar na toolbar
 
-        findViewById(R.id.btnNovo).setOnClickListener(v -> {
+        findViewById(R.id.btnNovoPaciente).setOnClickListener(v -> {
             startActivity(new Intent(this, PacienteCreateActivity.class));
         });
 
@@ -66,13 +57,6 @@ public class PacienteListActivity extends BaseActivity {
 
         loadPacientes(null, 0, 20);
     }
-
-    private static String getTextTrim(EditText e) {
-        CharSequence cs = e.getText();
-        return cs == null ? "" : cs.toString().trim();
-    }
-
-    private static String emptyToNull(String s) { return (s == null || s.isEmpty()) ? null : s; }
 
     private void loadPacientes(String pacienteNome, Integer page, Integer size) {
         showLoading();

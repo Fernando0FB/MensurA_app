@@ -24,9 +24,9 @@ public interface ApiService {
     @GET("api/mensuracoes")
     Call<PagedResponse<MensuracaoDTO>> getMensuracoes(
             @Header("Authorization") String token,
-            @Query("pacienteNome") String pacienteNome,        // opcional
-            @Query("articulacao") String articulacao,    // opcional
-            @Query("page") Integer page,                 // se usar paginação
+            @Query("pacienteNome") String pacienteNome,
+            @Query("articulacao") String articulacao,
+            @Query("page") Integer page,
             @Query("size") Integer size
     );
 

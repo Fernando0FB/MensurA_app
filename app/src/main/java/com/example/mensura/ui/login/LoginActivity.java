@@ -1,20 +1,20 @@
 package com.example.mensura.ui.login;
 
-// LoginActivity.java
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.example.mensura.ui.main.MainActivity;
 import com.example.mensura.data.model.LoginRequest;
 import com.example.mensura.data.model.LoginResponse;
 import com.example.mensura.data.network.ApiClient;
 import com.example.mensura.data.network.ApiService;
 import com.example.mensura.ui.base.BaseActivity;
+import com.example.mensura.ui.main.MainActivity;
 import com.example.myapplication.R;
 
 import retrofit2.Call;
@@ -30,13 +30,35 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        edtUser = findViewById(R.id.edtUser);
-        edtPass = findViewById(R.id.edtPass);
-        btnLogin = findViewById(R.id.btnLogin);
+        SharedPreferences prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE);
 
         FrameLayout overlay = findViewById(R.id.loadingOverlay);
         setLoadingOverlay(overlay);
+
+        if (prefs.getString("LOGIN", null) != null && prefs.getString("SENHA", null) != null) {
+            showLoading();
+            LoginRequest request = new LoginRequest(
+                    prefs.getString("LOGIN", null),
+                    prefs.getString("SENHA", null)
+            );
+            extractToken(request, new LoginCallback() {
+                @Override
+                public void onLoginSuccess(String token, String nomeCompleto) {
+                    hideLoading();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                }
+
+                @Override
+                public void onLoginFailure(String errorMessage) {
+                    hideLoading();
+                }
+            });
+        }
+
+        edtUser = findViewById(R.id.edtUsuario);
+        edtPass = findViewById(R.id.edtSenha);
+        btnLogin = findViewById(R.id.btnEntrar);
 
         btnLogin.setOnClickListener(v -> doLogin());
     }
@@ -50,37 +72,50 @@ public class LoginActivity extends BaseActivity {
         showLoading();
         btnLogin.setEnabled(false);
 
+        extractToken(request, new LoginCallback() {
+            @Override
+            public void onLoginSuccess(String token, String nomeCompleto) {
+                hideLoading();
+                btnLogin.setEnabled(true);
+                Toast.makeText(LoginActivity.this, "Login OK!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onLoginFailure(String errorMessage) {
+                hideLoading();
+                btnLogin.setEnabled(true);
+                Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void extractToken(LoginRequest request, LoginCallback callback) {
         ApiService api = ApiClient.getClient().create(ApiService.class);
         api.login(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                hideLoading();
-                btnLogin.setEnabled(true);
-
                 if (response.isSuccessful() && response.body() != null) {
                     String token = response.body().getToken();
-                    String nomeCompleto = response.body().getNomeCompleto();
+                    String nomeCompleto = response.body().getNome();
 
                     SharedPreferences prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE);
+                    prefs.edit().putString("LOGIN", request.getLogin()).apply();
+                    prefs.edit().putString("SENHA", request.getSenha()).apply();
                     prefs.edit().putString("JWT_TOKEN", token).apply();
                     prefs.edit().putString("USER_NAME", nomeCompleto).apply();
 
-                    Toast.makeText(LoginActivity.this, "Login OK!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
+                    callback.onLoginSuccess(token, nomeCompleto);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login inválido!", Toast.LENGTH_SHORT).show();
+                    callback.onLoginFailure("Login inválido!");
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                hideLoading();
-                btnLogin.setEnabled(true);
-
-                Toast.makeText(LoginActivity.this, "Erro: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                callback.onLoginFailure("Erro de conexão");
             }
         });
     }
-
 }

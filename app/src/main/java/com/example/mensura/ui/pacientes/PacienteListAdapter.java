@@ -44,18 +44,15 @@ public class PacienteListAdapter extends RecyclerView.Adapter<PacienteListAdapte
                 (p.getNome()!=null && !p.getNome().isEmpty()) ? p.getNome() : "Paciente"
         );
 
-        h.cpfPaciente.setText(cpfFormat(p.getCpf())); // já trata null/tamanho
+        h.cpfPaciente.setText(cpfFormat(p.getCpf()));
 
-        // Data nascimento (LocalDate -> dd/MM/yyyy)
         String dn = p.getDataNascimento();
         if (dn != null) {
             DateTimeFormatter F = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 F = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                h.dataNascimentoPaciente.setText("Nasc.: " + LocalDate.parse(dn).format(F));
+                h.dataNascimentoPaciente.setText("Data nascimento: " + LocalDate.parse(dn).format(F));
             }
-        } else {
-            h.dataNascimentoPaciente.setText("Nasc.: Não informado");
         }
 
         h.idadePaciente.setText(
@@ -76,14 +73,15 @@ public class PacienteListAdapter extends RecyclerView.Adapter<PacienteListAdapte
     }
 
     static class PacienteViewHolder extends RecyclerView.ViewHolder {
-        TextView nomePaciente, cpfPaciente, dataNascimentoPaciente, idadePaciente;
+        TextView nomePaciente, cpfPaciente, dataNascimentoPaciente, idadePaciente, quantidadeMedicoes;
 
         public PacienteViewHolder(@NonNull View itemView) {
             super(itemView);
-            nomePaciente = itemView.findViewById(R.id.nomePaciente);
-            cpfPaciente = itemView.findViewById(R.id.cpfPaciente);
-            dataNascimentoPaciente = itemView.findViewById(R.id.dataNascimentoPaciente);
-            idadePaciente = itemView.findViewById(R.id.idadePaciente);
+            nomePaciente = itemView.findViewById(R.id.tvNomePaciente);
+            cpfPaciente = itemView.findViewById(R.id.tvCpfPasciente);
+            dataNascimentoPaciente = itemView.findViewById(R.id.tvDataNascimento);
+            idadePaciente = itemView.findViewById(R.id.tvIdadePaciente);
+            quantidadeMedicoes = itemView.findViewById(R.id.tvQtdMedicoes);
         }
     }
 }
