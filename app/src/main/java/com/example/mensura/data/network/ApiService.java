@@ -5,6 +5,7 @@ import com.example.mensura.data.model.LoginRequest;
 import com.example.mensura.data.model.LoginResponse;
 import com.example.mensura.data.model.MensuracaoCreateDTO;
 import com.example.mensura.data.model.MensuracaoDTO;
+import com.example.mensura.data.model.PacienteCreateDTO;
 import com.example.mensura.data.model.PacienteDTO;
 import com.example.mensura.data.model.PagedResponse;
 
@@ -47,7 +48,7 @@ public interface ApiService {
     @POST("api/pacientes")
     Call<PacienteDTO> createPaciente(
             @Header("Authorization") String token,
-            @Body PacienteDTO paciente
+            @Body PacienteCreateDTO paciente
     );
 
     @POST("api/mensuracoes")

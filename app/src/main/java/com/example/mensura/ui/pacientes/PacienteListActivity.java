@@ -2,11 +2,13 @@ package com.example.mensura.ui.pacientes;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class PacienteListActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
@@ -38,22 +41,29 @@ public class PacienteListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pacienteslist);
 
-        //TODO ver para adicionar a filtragem com base no nome do paciente digitado
         recyclerView = findViewById(R.id.rvPacientes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //TODO validar o scroll infinito das infos. se caso tiver mais do que 20 infos, como que vai funcionar o scroll?
 
-        //TODO Botão de voltar na toolbar
-
         findViewById(R.id.btnNovoPaciente).setOnClickListener(v -> {
             startActivity(new Intent(this, PacienteCreateActivity.class));
+        });
+
+        findViewById(R.id.btnVoltar).setOnClickListener(v -> {
+            startActivity(new Intent(this, MainActivity.class));
         });
 
         setLoadingOverlay(findViewById(R.id.loadingOverlay));
 
         SharedPreferences prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE);
         token = prefs.getString("JWT_TOKEN", null);
+
+        findViewById(R.id.btnBuscar).setOnClickListener(v -> {
+            EditText etNomePaciente = findViewById(R.id.edtBuscarPaciente);
+            String nomePaciente = etNomePaciente.getText().toString();
+            loadPacientes(nomePaciente, 0, 20);
+        });
 
         loadPacientes(null, 0, 20);
     }
@@ -69,28 +79,25 @@ public class PacienteListActivity extends BaseActivity {
                                            Response<PagedResponse<PacienteDTO>> response) {
                         hideLoading();
                         if (response.isSuccessful() && response.body() != null) {
-                            Log.e("UAAAA", "DEU SUCESSO");
-                            Log.e("UAAAA", String.valueOf(response.body().getContent().isEmpty()));
-                            Log.e("UAAAA", String.valueOf(response.body().getContent().size()));
                             List<PacienteDTO> lista = response.body().getContent();
                             recyclerView.setAdapter(new PacienteListAdapter(lista, id -> editarPaciente(id)));
                         } else {
-                            Log.e("UAAAA", "Erro: " + response.message());
                             Toast.makeText(PacienteListActivity.this, "Erro ao carregar pacientes", Toast.LENGTH_SHORT).show();
+                            Log.e("DEBUG", "Erro: " + response.code() + " - " + response.message());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<PagedResponse<PacienteDTO>> call, Throwable throwable) {
                         hideLoading();
-                        Toast.makeText(PacienteListActivity.this, "Falha: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("UAAAA", throwable.getMessage());
+                        Toast.makeText(PacienteListActivity.this, "Erro ao carregar pacientes", Toast.LENGTH_SHORT).show();
+                        Log.e("DEBUG", "Erro: " + throwable.getMessage());
                     }
                 });
     }
 
     public void editarPaciente(int id) {
-        Intent intent = new Intent(this, PacienteEditActivity.class);
+        Intent intent = new Intent(this, PacienteCreateActivity.class);
         intent.putExtra("PACIENTE_ID", id);
         startActivity(intent);
     }

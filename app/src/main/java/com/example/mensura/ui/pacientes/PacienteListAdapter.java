@@ -1,11 +1,13 @@
 package com.example.mensura.ui.pacientes;
 
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mensura.data.model.PacienteDTO;
@@ -15,6 +17,7 @@ import com.google.android.material.button.MaterialButton;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 public class PacienteListAdapter extends RecyclerView.Adapter<PacienteListAdapter.PacienteViewHolder> {
 
@@ -36,30 +39,35 @@ public class PacienteListAdapter extends RecyclerView.Adapter<PacienteListAdapte
         return new PacienteViewHolder(v);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onBindViewHolder(@NonNull PacienteViewHolder h, int position) {
-        PacienteDTO p = pacientes.get(position);
+    public void onBindViewHolder(@NonNull PacienteViewHolder holder, int position) {
+        PacienteDTO paciente = pacientes.get(position);
 
-        h.nomePaciente.setText(
-                (p.getNome()!=null && !p.getNome().isEmpty()) ? p.getNome() : "Paciente"
+        holder.nomePaciente.setText(
+                (paciente.getNome()!=null && !paciente.getNome().isEmpty()) ? paciente.getNome() : "Paciente"
         );
 
-        h.cpfPaciente.setText(cpfFormat(p.getCpf()));
+        holder.cpfPaciente.setText(cpfFormat(paciente.getCpf()));
 
-        String dn = p.getDataNascimento();
+        LocalDate dn = paciente.getDataNascimento();
         if (dn != null) {
-            DateTimeFormatter F = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                F = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                h.dataNascimentoPaciente.setText("Data nascimento: " + LocalDate.parse(dn).format(F));
+                holder.dataNascimentoPaciente.setText("Data nascimento: " + dn.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             }
         }
 
-        h.idadePaciente.setText(
-                p.getIdade() != null ? p.getIdade() + " anos" : "—"
+        holder.idadePaciente.setText(
+            paciente.getIdade() != null ?
+                String.valueOf(paciente.getIdade()) + " anos" : "Idade não informada"
         );
 
-        h.itemView.setOnClickListener(v -> listener.onPacienteClick(p.getId()));
+        holder.itemView.setOnClickListener(v -> listener.onPacienteClick(paciente.getId()));
+
+        holder.quantidadeMensuracoes.setText(
+                paciente.getQuantidadeMensuracoes() != null ?
+                        String.valueOf(paciente.getQuantidadeMensuracoes()) + " medições" : "0 medições"
+        );
     }
 
     @Override
@@ -73,7 +81,7 @@ public class PacienteListAdapter extends RecyclerView.Adapter<PacienteListAdapte
     }
 
     static class PacienteViewHolder extends RecyclerView.ViewHolder {
-        TextView nomePaciente, cpfPaciente, dataNascimentoPaciente, idadePaciente, quantidadeMedicoes;
+        TextView nomePaciente, cpfPaciente, dataNascimentoPaciente, idadePaciente, quantidadeMensuracoes;
 
         public PacienteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,7 +89,7 @@ public class PacienteListAdapter extends RecyclerView.Adapter<PacienteListAdapte
             cpfPaciente = itemView.findViewById(R.id.tvCpfPasciente);
             dataNascimentoPaciente = itemView.findViewById(R.id.tvDataNascimento);
             idadePaciente = itemView.findViewById(R.id.tvIdadePaciente);
-            quantidadeMedicoes = itemView.findViewById(R.id.tvQtdMedicoes);
+            quantidadeMensuracoes = itemView.findViewById(R.id.tvQtdMedicoes);
         }
     }
 }

@@ -3,9 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#6C6C6C</color>
+    <color name="medium_grey">#DADADA</color>
     <color name="light_grey">#F2F2F4</color>
     <color name="background">#F0F6FD</color>
     <color name="cor_botoes1">#2A9FB0</color>
     <color name="cor_botoes2">#51B879</color>
+    <color name="cor_botoes3">#FF000000</color>
     <color name="background_padrao">#ECECEC</color>
 </resources>

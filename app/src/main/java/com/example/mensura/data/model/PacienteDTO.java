@@ -1,14 +1,17 @@
 package com.example.mensura.data.model;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.time.LocalDate;
 
 public class PacienteDTO {
     private int id;
     private String nome;
     private String cpf;
-    private Integer idade;
     private String email;
-    private String dataNascimento;
+    private LocalDate dataNascimento;
     private String sexo;
     private String observacoes;
     private Long quantidadeMensuracoes;
@@ -37,14 +40,6 @@ public class PacienteDTO {
         this.cpf = cpf;
     }
 
-    public Integer getIdade() {
-        return idade;
-    }
-
-    public void setIdade(Integer idade) {
-        this.idade = idade;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -53,11 +48,11 @@ public class PacienteDTO {
         this.email = email;
     }
 
-    public String getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
@@ -82,5 +77,20 @@ public class PacienteDTO {
     }
     public void setQuantidadeMensuracoes(Long quantidadeMensuracoes) {
         this.quantidadeMensuracoes = quantidadeMensuracoes;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Integer getIdade() {
+        if (dataNascimento == null) return null;
+        LocalDate hoje = LocalDate.now();
+        return hoje.getYear() - dataNascimento.getYear() -
+                (hoje.getDayOfYear() < dataNascimento.getDayOfYear() ? 1 : 0);
+    }
+
+    @Override
+    public String toString() {
+        return "PacienteDTO{" + "id=" + id + ", nome='" + nome + '"' + ", cpf='" + cpf + '"' + ", email='"
+                + email + '"' + ", dataNascimento=" + dataNascimento + ", sexo='" + sexo + '"' + ", observacoes='"
+                + observacoes + '"' + ", quantidadeMensuracoes=" + quantidadeMensuracoes + '}';
     }
 }

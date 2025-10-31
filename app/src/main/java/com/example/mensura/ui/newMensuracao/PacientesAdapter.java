@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mensura.data.model.PacienteDTO;
@@ -51,6 +52,7 @@ public class PacientesAdapter extends RecyclerView.Adapter<PacientesAdapter.VH> 
         return new VH(v);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull VH h, int position) {
         PacienteDTO p = data.get(position);
@@ -63,7 +65,7 @@ public class PacientesAdapter extends RecyclerView.Adapter<PacientesAdapter.VH> 
         h.cpfPaciente.setText(cpfFormat(p.getCpf()));
 
         // Data de nascimento
-        String dn = p.getDataNascimento();
+        String dn = p.getDataNascimento().toString();
         if (dn != null && !dn.isEmpty()) {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
