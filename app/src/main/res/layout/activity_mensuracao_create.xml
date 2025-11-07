@@ -1,59 +1,312 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="16dp"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F3F7FF">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <!-- AppBar verde com cantos arredondados embaixo -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="4dp"
+        app:strokeWidth="0dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tvPaciente"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <!-- Spinner para Articulação -->
-        <Spinner
-            android:id="@+id/spinnerArticulacao"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_header_gradient"
+            android:padding="16dp">
 
-        <!-- Spinner para Lado -->
-        <Spinner
-            android:id="@+id/spinnerLado"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <ImageButton
+                    android:id="@+id/btnVoltar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_back_24"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nova Mensuração"
+                    android:layout_marginStart="16dp"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/cardHeader"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="24dp">
 
-        <!-- Spinner para Movimento -->
-        <Spinner
-            android:id="@+id/spinnerMovimento"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <!-- Card com selects -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#E3E8F1"
+                android:backgroundTint="#FFFFFF">
 
-        <!-- EditText para Posição -->
-        <EditText
-            android:id="@+id/edtPosicao"
-            android:hint="Posição"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-        <Button
-            android:id="@+id/btnCriarMensuracao"
-            android:text="Salvar e iniciar medição"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                    <!-- Articulação -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilArticulacao"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        app:hintTextColor="@color/cor_botoes1"
+                        android:layout_marginTop="10dp"
+                        android:paddingTop="8dp"
+                        android:hint="Sexo"
+                        app:hintAnimationEnabled="false">
 
-        <ProgressBar
-            android:id="@+id/progress"
-            android:visibility="gone"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                        <Spinner
+                            android:id="@+id/edtArticulacao"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_spinner"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
-</ScrollView>
+                    <!-- Tipo de Movimento -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilLado"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        app:hintTextColor="@color/cor_botoes1"
+                        android:layout_marginTop="10dp"
+                        android:paddingTop="8dp"
+                        android:hint="Sexo"
+                        app:hintAnimationEnabled="false">
+
+                        <Spinner
+                            android:id="@+id/edtLado"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_spinner"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Tipo de Movimento -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilTipo"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        app:hintTextColor="@color/cor_botoes1"
+                        android:layout_marginTop="10dp"
+                        android:paddingTop="8dp"
+                        android:hint="Sexo"
+                        app:hintAnimationEnabled="false">
+
+                        <Spinner
+                            android:id="@+id/edtMovimento"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_spinner"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Painel do ângulo -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPainel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#DCE6F3"
+                android:background="@drawable/bg_panel_gradient">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/menorValor"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="6dp"
+                            android:text="Menor ângulo: --"
+                            android:textColor="#516EFF"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/maiorValor"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="6dp"
+                            android:gravity="end"
+                            android:text="Maior ângulo: --"
+                            android:textColor="#516EFF"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+
+
+                    <!-- Valor grande -->
+
+                    <!-- Gauge (visual) -->
+                    <FrameLayout
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:layout_gravity="center">
+
+                        <com.example.mensura.ui.widgets.AngleGaugeView
+                            android:id="@+id/gauge"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:ringWidth="18dp"
+                            app:maxAngle="180"/>
+
+                        <TextView
+                            android:id="@+id/tvAnguloMiolo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textAlignment="center"
+                            android:text="0°"
+                            android:textColor="@color/cor_botoes1"
+                            android:textSize="30sp"/>
+                    </FrameLayout>
+                    <!-- Título com ícone -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_round_insights_24"
+                            app:tint="#516EFF" />
+
+                        <TextView
+                            android:id="@+id/tvTituloPainel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:text="Ângulo Atual"
+                            android:textColor="#516EFF"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Ações -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <!-- Iniciar Gravação (escuro) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnIniciar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="Iniciar Gravação"
+                    android:textAllCaps="false"
+                    android:backgroundTint="#0B0B18"
+                    android:textColor="#FFFFFF"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_round_insights_24"
+                    app:iconSize="14dp"
+                    app:iconPadding="2dp"
+                    app:iconTint="#FFFFFF"
+                    android:textSize="13dp"/>
+
+                <Space
+                    android:layout_width="12dp"
+                    android:layout_height="1dp" />
+
+                <!-- Reiniciar (outlined) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnReiniciar"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="Reiniciar"
+                    android:textAllCaps="false"
+                    app:strokeColor="#E0E5EE"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="12dp"
+                    app:iconSize="18dp"
+                    app:iconPadding="8dp"
+                    app:iconTint="#2A2D34"
+                    android:textSize="13dp" />
+            </LinearLayout>
+
+            <!-- Salvar (verde) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFinalizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="12dp"
+                android:text="Finalizar Mensuração"
+                android:textAllCaps="false"
+                android:backgroundTint="#2E9E44"
+                android:textColor="#FFFFFF"
+                app:cornerRadius="12dp"
+                app:iconSize="18dp"
+                app:iconPadding="8dp"
+                app:iconTint="#FFFFFF" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include layout="@layout/loading_overlay" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

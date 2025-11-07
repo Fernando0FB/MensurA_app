@@ -12,16 +12,12 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mensura.data.model.MensuracaoDTO;
 import com.example.mensura.data.model.PacienteDTO;
 import com.example.mensura.data.model.PagedResponse;
 import com.example.mensura.data.network.ApiClient;
 import com.example.mensura.data.network.ApiService;
 import com.example.mensura.ui.base.BaseActivity;
-import com.example.mensura.ui.main.MainActivity;
-import com.example.mensura.ui.mensuracoes.MensuracoesActivity;
 import com.example.myapplication.R;
-import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.List;
 
@@ -44,14 +40,12 @@ public class PacienteListActivity extends BaseActivity {
         recyclerView = findViewById(R.id.rvPacientes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //TODO validar o scroll infinito das infos. se caso tiver mais do que 20 infos, como que vai funcionar o scroll?
-
         findViewById(R.id.btnNovoPaciente).setOnClickListener(v -> {
             startActivity(new Intent(this, PacienteCreateActivity.class));
         });
 
         findViewById(R.id.btnVoltar).setOnClickListener(v -> {
-            startActivity(new Intent(this, MainActivity.class));
+            finish();
         });
 
         setLoadingOverlay(findViewById(R.id.loadingOverlay));
@@ -69,7 +63,7 @@ public class PacienteListActivity extends BaseActivity {
     }
 
     private void loadPacientes(String pacienteNome, Integer page, Integer size) {
-        showLoading();
+        showLoading(PacienteListActivity.this);
 
         ApiService api = ApiClient.getClient().create(ApiService.class);
         api.getPacientes("Bearer " + token, pacienteNome, page, size)
@@ -80,7 +74,7 @@ public class PacienteListActivity extends BaseActivity {
                         hideLoading();
                         if (response.isSuccessful() && response.body() != null) {
                             List<PacienteDTO> lista = response.body().getContent();
-                            recyclerView.setAdapter(new PacienteListAdapter(lista, id -> editarPaciente(id)));
+                            recyclerView.setAdapter(new PacienteListAdapter(lista));
                         } else {
                             Toast.makeText(PacienteListActivity.this, "Erro ao carregar pacientes", Toast.LENGTH_SHORT).show();
                             Log.e("DEBUG", "Erro: " + response.code() + " - " + response.message());

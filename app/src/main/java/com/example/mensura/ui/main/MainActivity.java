@@ -3,11 +3,14 @@ package com.example.mensura.ui.main;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.mensura.ui.base.BaseActivity;
 import com.example.mensura.ui.login.LoginActivity;
@@ -18,12 +21,12 @@ import com.example.mensura.util.Bluetooth.BluetoothManager;
 import com.example.mensura.util.Bluetooth.ScannerBtle;
 import com.example.myapplication.R;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends BaseActivity {
 
     public static final int REQUEST_ENABLE_BT = 1;
     private ScannerBtle scannerBtle;
     private Button btnBluetooth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,15 +71,14 @@ public class MainActivity extends BaseActivity {
 
         findViewById(R.id.cardIniciar).setOnClickListener(v -> {
             if (scannerBtle.isConnected()) {
-                Intent intent = new Intent(this, PacienteSelectActivity.class);
-                intent.putExtra("NEW_MEASUREMENT", true);
-                startActivity(intent);
+                startActivity(new Intent(this, PacienteSelectActivity.class));
             } else {
                 Toast.makeText(this, "Conecte-se a um dispositivo Bluetooth primeiro.", Toast.LENGTH_SHORT).show();
             }
         });
 
         findViewById(R.id.btnHeaderAction).setOnClickListener(v -> {
+            scannerBtle.disconnect();
             prefs.edit().clear().apply();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);

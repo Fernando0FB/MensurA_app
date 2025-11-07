@@ -97,8 +97,11 @@ public class PacienteCreateActivity extends BaseActivity {
 
         // Configurando o click do botão de salvar
         findViewById(R.id.btnSalvar).setOnClickListener(v -> {
-
             salvar();
+        });
+
+        findViewById(R.id.btnVoltar).setOnClickListener(v -> {
+            finish();
         });
     }
 
@@ -156,7 +159,7 @@ public class PacienteCreateActivity extends BaseActivity {
         novoPaciente.setDataNascimento(LocalDate.parse(edtDataNasc.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         novoPaciente.setObservacoes(emptyToNull(getTrim(edtObs)));
 
-        showLoading();
+        showLoading(PacienteCreateActivity.this);
         ApiService api = ApiClient.getClient().create(ApiService.class);
         api.createPaciente("Bearer " + token, PacienteCreateDTO.from(novoPaciente)).enqueue(new Callback<PacienteDTO>() {
             @Override

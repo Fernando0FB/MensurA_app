@@ -13,8 +13,8 @@ public class PacienteDTO {
     private String email;
     private LocalDate dataNascimento;
     private String sexo;
-    private String observacoes;
     private Long quantidadeMensuracoes;
+    private String observacoes;
 
     public int getId() {
         return id;

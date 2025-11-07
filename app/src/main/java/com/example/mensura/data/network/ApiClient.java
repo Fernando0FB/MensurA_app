@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -28,6 +29,7 @@ public class ApiClient {
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
                 .create();
 
         if (retrofit == null) {

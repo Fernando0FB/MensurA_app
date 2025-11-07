@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F7FF">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="4dp"
+        app:strokeWidth="0dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_header_gradient"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <ImageButton
+                    android:id="@+id/btnVoltar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_back_24"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nova Mensuração"
+                    android:layout_marginStart="16dp"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/cardHeader"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="24dp">
+
+            <!-- CARD: Dados do Paciente -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPaciente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#D8E2F1"
+                app:strokeWidth="1dp"
+                android:backgroundTint="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Título -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_person_24"
+                            app:tint="#3E55FF" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="Dados do Paciente"
+                            android:textColor="#3E55FF"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <!-- Campos -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nome Completo"
+                            android:textColor="#6B7280"/>
+                        <TextView
+                            android:id="@+id/tvNome"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nome do paciente"
+                            android:textColor="#111827"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CPF"
+                            android:textColor="#6B7280"/>
+                        <TextView
+                            android:id="@+id/tvCpf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="123.456.789-01"
+                            android:textColor="#111827"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Data de Nascimento"
+                            android:textColor="#6B7280"/>
+                        <TextView
+                            android:id="@+id/tvNascimento"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--/--/----"
+                            android:textColor="#111827"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD: Relatório de Mensuração (com borda verde) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardRelatorio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#BEE8C8"
+                app:strokeWidth="2dp"
+                android:backgroundTint="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Título -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            app:tint="#2E9E44"
+                            android:src="@drawable/outline_library_books_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="Relatório de Mensuração"
+                            android:textColor="#2E9E44"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <!-- Data -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="12dp"
+                        android:paddingBottom="10dp">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            app:tint="#6B7280"
+                            android:src="@drawable/ic_round_event_24" />
+
+                        <TextView
+                            android:id="@+id/tvDataHora"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="--/--/-- às --:--"
+                            android:textColor="#374151"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#E5E7EB" />
+
+                    <!-- Articulação / Tipo -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_marginTop="12dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Articulação" android:textColor="#6B7280"/>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    app:tint="#516EFF"
+                                    android:src="@drawable/ic_round_insights_24"/>
+                                <TextView
+                                    android:id="@+id/tvArticulacao"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:text="-"
+                                    android:textColor="#111827"
+                                    android:textStyle="bold"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tipo de Movimento" android:textColor="#6B7280"/>
+                            <TextView
+                                android:id="@+id/tvTipo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="3dp"
+                                android:text="-"
+                                android:textColor="#3B49FF"
+                                android:textSize="12sp"
+                                android:background="@drawable/bg_chip_tipo"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Bloco: Medições Angulares -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        android:backgroundTint="#F6FBFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Medições Angulares"
+                                android:textAlignment="center"
+                                android:textColor="#6B7280"
+                                android:textStyle="bold"/>
+
+                            <!-- Cards pequenos -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="3"
+                                android:layout_marginTop="10dp">
+
+                                <!-- Inicial -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginEnd="8dp"
+                                    app:cardCornerRadius="12dp"
+                                    app:cardElevation="0dp"
+                                    app:strokeWidth="1dp"
+                                    app:strokeColor="#E5E7F2"
+                                    android:backgroundTint="#FFFFFF">
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:padding="12dp">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Ângulo Inicial"
+                                            android:textColor="#6B7280"
+                                            android:textSize="12sp"/>
+                                        <TextView
+                                            android:id="@+id/tvAngInicial"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="-°"
+                                            android:textColor="#516EFF"
+                                            android:textStyle="bold"
+                                            android:textSize="18sp"/>
+                                    </LinearLayout>
+                                </com.google.android.material.card.MaterialCardView>
+
+                                <!-- Final -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginEnd="8dp"
+                                    app:cardCornerRadius="12dp"
+                                    app:cardElevation="0dp"
+                                    app:strokeWidth="1dp"
+                                    app:strokeColor="#E5E7F2"
+                                    android:backgroundTint="#FFFFFF">
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:padding="12dp">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Ângulo Final"
+                                            android:textColor="#6B7280"
+                                            android:textSize="12sp"/>
+                                        <TextView
+                                            android:id="@+id/tvAngFinal"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="-°"
+                                            android:textColor="#2E9E44"
+                                            android:textStyle="bold"
+                                            android:textSize="18sp"/>
+                                    </LinearLayout>
+                                </com.google.android.material.card.MaterialCardView>
+
+                                <!-- Excursão -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:cardCornerRadius="12dp"
+                                    app:cardElevation="0dp"
+                                    app:strokeWidth="1dp"
+                                    app:strokeColor="#E5E7F2"
+                                    android:backgroundTint="#FFFFFF">
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:padding="12dp">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Excursão"
+                                            android:textColor="#6B7280"
+                                            android:textSize="12sp"/>
+                                        <TextView
+                                            android:id="@+id/tvExcursao"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="-°"
+                                            android:textColor="#7A24FF"
+                                            android:textStyle="bold"
+                                            android:textSize="18sp"/>
+                                    </LinearLayout>
+                                </com.google.android.material.card.MaterialCardView>
+                            </LinearLayout>
+
+                            <!-- Amplitude registrada -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="0dp"
+                                android:backgroundTint="#FFFFFF">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Amplitude de movimento registrada"
+                                        android:textColor="#6B7280"/>
+
+                                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                                        android:id="@+id/progAmplitude"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="8dp"
+                                        android:layout_marginTop="8dp"
+                                        app:trackCornerRadius="8dp"
+                                        app:indicatorColor="#2E9E44"
+                                        app:trackColor="#E5E7EB"
+                                        app:showAnimationBehavior="none"/>
+
+                                    <TextView
+                                        android:id="@+id/tvAmplitudePct"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="end"
+                                        android:layout_marginTop="6dp"
+                                        android:text="-%"
+                                        android:textColor="#374151"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="#E5E7EB" />
+
+                    <!-- Nível de Dor -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Nível de Dor"
+                        android:textColor="#6B7280"
+                        android:textStyle="bold"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:id="@+id/tvDorBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="8dp"
+                            android:text="-/10"
+                            android:textStyle="bold"
+                            android:textColor="#A97800"
+                            android:background="@drawable/bg_pill_green"/>
+
+                        <TextView
+                            android:id="@+id/tvDescricaoDor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="Dor Moderada"
+                            android:textColor="#374151"/>
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progDor"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="10dp"
+                        app:trackCornerRadius="8dp"
+                        app:indicatorColor="#E5A400"
+                        app:trackColor="#E5E7EB"
+                        app:showAnimationBehavior="none"
+                        android:max="10"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="#E5E7EB" />
+
+                    <!-- Observações -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Observações"
+                        android:textColor="#6B7280"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvObservacoes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:padding="14dp"
+                        android:text=""
+                        android:textColor="#374151"
+                        android:background="@drawable/bg_note_box"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include layout="@layout/loading_overlay" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

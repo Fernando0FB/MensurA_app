@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F7FF">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="4dp"
+        app:strokeWidth="0dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_header_gradient"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <ImageButton
+                    android:id="@+id/btnVoltar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_back_24"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Finalizando Mensuração"
+                    android:layout_marginStart="16dp"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- CONTEÚDO -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/cardHeader"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="24dp">
+
+            <!-- Card Resumo -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardResumo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#D8E2F1"
+                app:strokeWidth="1dp"
+                android:backgroundTint="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="15dp"
+                    android:showDividers="none">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="Paciente:"
+                            android:textStyle="bold"
+                            android:textColor="#444"/>
+
+                        <TextView
+                            android:id="@+id/tvPaciente"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="João Santos"
+                            android:textColor="#222"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="Articulação:"
+                            android:textStyle="bold"
+                            android:textColor="#444"/>
+
+                        <TextView
+                            android:id="@+id/tvArticulacao"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="Joelho Esquerdo"
+                            android:textColor="#222"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="Tipo:"
+                            android:textStyle="bold"
+                            android:textColor="#444"/>
+
+                        <TextView
+                            android:id="@+id/tvTipo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="Extensão"
+                            android:textColor="#222"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="Menor ângulo:"
+                            android:textStyle="bold"
+                            android:textColor="#444"/>
+
+                        <TextView
+                            android:id="@+id/tvMenorAngulo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="25°"
+                            android:textColor="#3E55FF"
+                            android:background="@drawable/bg_chip_angulo"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="2dp"
+                            android:textSize="13sp"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="Maior ângulo:"
+                            android:textStyle="bold"
+                            android:textColor="#444"/>
+
+                        <TextView
+                            android:id="@+id/tvMaiorAngulo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="25°"
+                            android:textColor="#3E55FF"
+                            android:background="@drawable/bg_chip_angulo"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="2dp"
+                            android:textSize="13sp"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="Excursão:"
+                            android:textStyle="bold"
+                            android:textColor="#444"/>
+
+                        <TextView
+                            android:id="@+id/tvExcursao"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="25°"
+                            android:textColor="#3E55FF"
+                            android:background="@drawable/bg_chip_angulo"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="2dp"
+                            android:textSize="13sp"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card Nível de Dor -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardDor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#D8E2F1"
+                app:strokeWidth="1dp"
+                android:backgroundTint="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nível de Dor"
+                            android:textStyle="bold"
+                            android:textColor="#444"
+                            android:textSize="15sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Obrigatório"
+                            android:layout_marginStart="6dp"
+                            android:paddingHorizontal="6dp"
+                            android:paddingVertical="2dp"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:background="@drawable/bg_chip_obrigatorio"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Selecione o nível de dor de 1 (mínima) a 10 (máxima)"
+                        android:textSize="13sp"
+                        android:textColor="#777"/>
+
+                    <!-- Linhas de seleção -->
+                    <GridLayout
+                        android:id="@+id/gridNivelDor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:columnCount="5"
+                        android:alignmentMode="alignMargins"
+                        android:useDefaultMargins="true">
+
+                        <!-- 1–10 -->
+                        <Button
+                            android:id="@+id/btn1"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="1"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+
+                        <Button
+                            android:id="@+id/btn2"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="2"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+
+                        <Button
+                            android:id="@+id/btn3"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="3"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+
+                        <Button
+                            android:id="@+id/btn4"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="4"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+
+                        <Button
+                            android:id="@+id/btn5"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="5"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+
+                        <Button
+                            android:id="@+id/btn6"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="6"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+
+                        <Button
+                            android:id="@+id/btn7"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="7"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+
+                        <Button
+                            android:id="@+id/btn8"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="8"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+
+                        <Button
+                            android:id="@+id/btn9"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="9"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+
+                        <Button
+                            android:id="@+id/btn10"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="1"
+                            android:layout_height="50dp"
+                            android:text="10"
+                            android:backgroundTint="#00000000"
+                            android:paddingHorizontal="0dp"
+                            android:textColor="#444"
+                            app:cornerRadius="10dp"/>
+                    </GridLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card Observações -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardObs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#D8E2F1"
+                app:strokeWidth="1dp"
+                android:backgroundTint="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Observações"
+                        android:textStyle="bold"
+                        android:textColor="#444"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Adicione observações sobre a mensuração (opcional)"
+                        android:textSize="13sp"
+                        android:textColor="#777"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilObs"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtObs"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:gravity="top|start"
+                            android:inputType="textMultiLine"
+                            android:hint="Digite observações relevantes sobre a mensuração, comportamento do paciente, dificuldades encontradas, etc."/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/tvContador"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0 caracteres"
+                        android:gravity="end"
+                        android:textSize="12sp"
+                        android:textColor="#999"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Botão principal -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSalvar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:text="Salvar Mensuração Completa"
+                android:textAllCaps="false"
+                android:enabled="false"
+                android:backgroundTint="#E0E5EE"
+                android:textColor="#FFFFFF"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_save_24"
+                app:iconTint="#FFFFFF"
+                app:iconPadding="8dp"/>
+
+            <TextView
+                android:id="@+id/tvAviso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0"
+                android:layout_marginTop="6dp"
+                android:text="* Por favor, selecione o nível de dor para continuar"
+                android:textColor="#B00020"
+                android:textSize="13sp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include layout="@layout/loading_overlay" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,93 +1,176 @@
 package com.example.mensura.ui.newMensuracao;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mensura.data.model.MensuracaoCreateDTO;  // resposta
-import com.example.mensura.data.model.MensuracaoDTO;
-import com.example.mensura.data.network.ApiClient;
-import com.example.mensura.data.network.ApiService;
-// troque para o seu R real:
+import com.example.mensura.ui.widgets.AngleGaugeView;
+import com.example.mensura.util.Bluetooth.BluetoothManager;
+import com.example.mensura.util.Bluetooth.ScannerBtle;
 import com.example.myapplication.R;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MensuracaoCreateActivity extends AppCompatActivity {
 
-    private long pacienteId = -1L;
-    private String pacienteNome = "";
-
-    private TextView tvPaciente;
-    private EditText edtPosicao;
+    private long idPaciente = -1L;
+    private String nomePaciente = "";
+    private static float menorAngulo = Integer.MAX_VALUE, maiorAngulo = Integer.MIN_VALUE;
     private Spinner spinnerArticulacao, spinnerLado, spinnerMovimento;
+    private static TextView menorValor, maiorValor;
+    private boolean realizandoLeitura = false;
 
-    private Button btnCriar;
-    private ProgressBar progress;
-
-    private ApiService api;
-    private String token;
-
-    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mensuracao_create);
 
-        tvPaciente = findViewById(R.id.tvPaciente);
-        spinnerArticulacao = findViewById(R.id.spinnerArticulacao);
-        spinnerLado = findViewById(R.id.spinnerLado);
-        spinnerMovimento = findViewById(R.id.spinnerMovimento);
-        edtPosicao = findViewById(R.id.edtPosicao);
-        btnCriar = findViewById(R.id.btnCriarMensuracao);
-        progress = findViewById(R.id.progress);
+        AngleGaugeView gauge = findViewById(R.id.gauge);
+        TextView tvMiolo  = findViewById(R.id.tvAnguloMiolo);
 
-        pacienteId = getIntent().getIntExtra("PACIENTE_ID", -1);
-        pacienteNome = getIntent().getStringExtra("PACIENTE_NOME");
-        tvPaciente.setText("Paciente: " + (pacienteNome != null ? pacienteNome : ("#" + pacienteId)));
-        Log.e("pacienteIdCreate", "Paciente no create: " + pacienteId);
-        Log.e("pacienteIdCreate", "extras: " + getIntent().getExtras().toString());
-        token = getTokenFromPrefs();
-        if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Token ausente. Faça login.", Toast.LENGTH_SHORT).show();
+        idPaciente = getIntent().getLongExtra("ID_PACIENTE", -1L);
+        nomePaciente = getIntent().getStringExtra("NOME_PACIENTE");
+
+        if (idPaciente == -1L) {
+            Toast.makeText(this, "ID do paciente inválido.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        api = ApiClient.getClient().create(ApiService.class);
+        ScannerBtle scannerBtle = BluetoothManager.getScannerBtle(this);
+        setLeituraOnlyListener(scannerBtle, gauge, tvMiolo);
 
-        // Preenche os Spinners
+        spinnerArticulacao = findViewById(R.id.edtArticulacao);
+        spinnerLado = findViewById(R.id.edtLado);
+        spinnerMovimento = findViewById(R.id.edtMovimento);
+        menorValor = findViewById(R.id.menorValor);
+        maiorValor = findViewById(R.id.maiorValor);
+
+        Button botaoIniciar = findViewById(R.id.btnIniciar);
+        botaoIniciar.setOnClickListener(v -> {
+            if (!realizandoLeitura) {
+                botaoIniciar.setText("Pausar gravação");
+                setLeituraComFuncionalidade(scannerBtle, gauge, tvMiolo);
+            } else {
+                botaoIniciar.setText("Iniciar gravação");
+                setLeituraOnlyListener(scannerBtle, gauge, tvMiolo);
+            }
+            realizandoLeitura = !realizandoLeitura;
+        });
+
+        findViewById(R.id.btnReiniciar).setOnClickListener(v -> {
+            botaoIniciar.setText("Iniciar gravação");
+            setLeituraOnlyListener(scannerBtle, gauge, tvMiolo);
+            menorAngulo = Float.MAX_VALUE;
+            menorValor.setText("Maior ângulo: --");
+
+            maiorAngulo = Float.MIN_VALUE;
+            maiorValor.setText("Maior ângulo: --");
+        });
+
+        findViewById(R.id.btnFinalizar).setOnClickListener(v -> {
+            if (menorAngulo == 0f || maiorAngulo == 0f) {
+                Toast.makeText(this, "Realize uma gravação de angulos primeiro!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(MensuracaoCreateActivity.this, ConclusaoActivity.class);
+            intent.putExtra("ID_PACIENTE", Long.valueOf(idPaciente));
+            intent.putExtra("NOME_PACIENTE", nomePaciente.toString());
+            intent.putExtra("MAIOR_ANGULO", (int) maiorAngulo);
+            intent.putExtra("MENOR_ANGULO", (int) menorAngulo);
+            intent.putExtra("ARTICULACAO", spinnerArticulacao.getSelectedItem().toString());
+            intent.putExtra("LADO", spinnerLado.getSelectedItem().toString());
+            intent.putExtra("MOVIMENTO", spinnerMovimento.getSelectedItem().toString());
+            startActivity(intent);
+        });
+
+        findViewById(R.id.btnVoltar).setOnClickListener(v -> {
+            finish();
+        });
+
         setupSpinners();
+    }
 
-        btnCriar.setOnClickListener(v -> criarMensuracao());
+    private static void setLeituraOnlyListener(ScannerBtle scannerBtle, AngleGaugeView gauge, TextView tvMiolo) {
+        scannerBtle.setOnLeituraCallback(angulo -> {
+            try {
+                float anguloFloat = Float.parseFloat(angulo);
+                updateGrafico(gauge, tvMiolo, anguloFloat);
+            } catch (NumberFormatException e) {}
+        });
+    }
+
+    private static void updateGrafico(AngleGaugeView gauge, TextView tvMiolo, float anguloFloat) {
+        gauge.setAngle(anguloFloat);
+        tvMiolo.setText(((int) anguloFloat) + "°");
+    }
+
+    private static void updateTela(float angulo) {
+        if(angulo < menorAngulo) {
+            menorAngulo = angulo;
+            menorValor.setText("Menor ângulo: " + (int) angulo + "º");
+        }
+        if(angulo > maiorAngulo) {
+            maiorAngulo = angulo;
+            maiorValor.setText("Maior ângulo: " + (int) angulo + "º");
+        }
+    }
+
+    private static void setLeituraComFuncionalidade(ScannerBtle scannerBtle, AngleGaugeView gauge, TextView tvMiolo) {
+        scannerBtle.setOnLeituraCallback(angulo -> {
+            try {
+                float anguloFloat = Float.parseFloat(angulo);
+                updateGrafico(gauge, tvMiolo, anguloFloat);
+                updateTela(anguloFloat);
+            } catch (NumberFormatException e) {
+
+            }
+        });
     }
 
     private void setupSpinners() {
-        // Articulação: JOELHO ou COTOVELO
-        ArrayAdapter<CharSequence> articulacaoAdapter = ArrayAdapter.createFromResource(this,
-                R.array.articulacao_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> articulacaoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new String[]{"Selecione a articulação", "Joelho", "Cotovelo"}) {
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
+        };
         articulacaoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerArticulacao.setAdapter(articulacaoAdapter);
+        spinnerArticulacao.setSelection(0);
 
-        // Lado: DIREITO ou ESQUERDO
-        ArrayAdapter<CharSequence> ladoAdapter = ArrayAdapter.createFromResource(this,
-                R.array.lado_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> ladoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new String[]{"Selecione o lado", "Esquerdo", "Direto"}) {
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
+        };
         ladoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLado.setAdapter(ladoAdapter);
+        spinnerLado.setSelection(0);
 
-        // Movimento: FLEXAO, EXTENSAO, PRONACAO, SUPINACAO
-        ArrayAdapter<CharSequence> movimentoAdapter = ArrayAdapter.createFromResource(this,
-                R.array.movimento_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> movimentoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new String[]{"Selecione o movimento","Flexão","Extensão","Pronação","Supinação"}) {
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
+        };
         movimentoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMovimento.setAdapter(movimentoAdapter);
+        spinnerMovimento.setSelection(0);
     }
 
+    /*
     private void criarMensuracao() {
         String articulacao = spinnerArticulacao.getSelectedItem().toString();
         String lado = spinnerLado.getSelectedItem().toString();
@@ -147,10 +230,5 @@ public class MensuracaoCreateActivity extends AppCompatActivity {
             }
         });
     }
-
-    private String getTokenFromPrefs() {
-        // CONFIRME chave/arquivo
-        SharedPreferences sp = getSharedPreferences("APP_PREFS", MODE_PRIVATE);
-        return sp.getString("JWT_TOKEN", "");
-    }
+     */
 }

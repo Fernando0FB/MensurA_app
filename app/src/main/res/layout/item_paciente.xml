@@ -9,6 +9,7 @@
     android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
+        android:id="@+id/layoutItemPaciente"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

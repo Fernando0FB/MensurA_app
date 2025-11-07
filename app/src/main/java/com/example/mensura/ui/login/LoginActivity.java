@@ -2,12 +2,15 @@ package com.example.mensura.ui.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.mensura.data.model.LoginRequest;
 import com.example.mensura.data.model.LoginResponse;
@@ -21,6 +24,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class LoginActivity extends BaseActivity {
 
     private EditText edtUser, edtPass;
@@ -36,7 +41,7 @@ public class LoginActivity extends BaseActivity {
         setLoadingOverlay(overlay);
 
         if (prefs.getString("LOGIN", null) != null && prefs.getString("SENHA", null) != null) {
-            showLoading();
+            showLoading(LoginActivity.this);
             LoginRequest request = new LoginRequest(
                     prefs.getString("LOGIN", null),
                     prefs.getString("SENHA", null)
@@ -69,7 +74,7 @@ public class LoginActivity extends BaseActivity {
 
         LoginRequest request = new LoginRequest(login, senha);
 
-        showLoading();
+        showLoading(LoginActivity.this);
         btnLogin.setEnabled(false);
 
         extractToken(request, new LoginCallback() {

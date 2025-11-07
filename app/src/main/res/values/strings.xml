@@ -3,21 +3,24 @@
 
     <!-- Adiciona as opções para Articulação -->
     <string-array name="articulacao_options">
-        <item>JOELHO</item>
-        <item>COTOVELO</item>
+        <item>Selecione a articulação</item>
+        <item>Joelho</item>
+        <item>Cotovelo</item>
     </string-array>
 
     <!-- Adiciona as opções para Lado -->
     <string-array name="lado_options">
-        <item>DIREITO</item>
-        <item>ESQUERDO</item>
+        <item>Selecione o lado</item>
+        <item>Direito</item>
+        <item>Esquerdo</item>
     </string-array>
 
     <!-- Adiciona as opções para Movimento -->
     <string-array name="movimento_options">
-        <item>FLEXAO</item>
-        <item>EXTENSAO</item>
-        <item>PRONACAO</item>
-        <item>SUPINACAO</item>
+        <item>Selecione o movimento</item>
+        <item>Flexão</item>
+        <item>Extensão</item>
+        <item>Pronação</item>
+        <item>Supinação</item>
     </string-array>
 </resources>

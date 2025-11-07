@@ -1,98 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="8dp"
-    app:cardUseCompatPadding="true"
-    app:cardCornerRadius="16dp"
-    app:strokeWidth="0dp">
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#E3E8F1"
+    app:strokeWidth="1dp"
+    android:backgroundTint="#FFFFFF">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
+        android:id="@+id/containerItemMensuracao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Título: Paciente -->
+        <!-- Ícone circular -->
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_icon_circle"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/imgIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_show_chart_24"
+                app:tint="#6A5AFF" />
+        </FrameLayout>
+
+        <!-- Nome da articulação -->
+        <TextView
+            android:id="@+id/tvArticulacaoLado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/iconContainer"
+            android:layout_marginStart="12dp"
+            android:text="Joelho Direito"
+            android:textColor="#1B1C1E"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <!-- Tag (tipo de movimento) -->
+        <TextView
+            android:id="@+id/tvTipoMovimento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/tvArticulacaoLado"
+            android:layout_marginStart="8dp"
+            android:paddingVertical="2dp"
+            android:paddingHorizontal="10dp"
+            android:text="Flexão"
+            android:textColor="#3B49FF"
+            android:textSize="12sp"
+            android:background="@drawable/bg_chip_tipo"/>
+
+        <!-- Nome do paciente -->
         <TextView
             android:id="@+id/tvPaciente"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Paciente"
+            android:layout_below="@id/tvArticulacaoLado"
+            android:layout_toEndOf="@id/iconContainer"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:text="Maria Silva"
+            android:textColor="#4A4C52"
+            android:textSize="14sp"/>
+
+        <!-- Ícone e data -->
+        <LinearLayout
+            android:id="@+id/containerData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/tvPaciente"
+            android:layout_toEndOf="@id/iconContainer"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_round_event_24"
+                app:tint="#707070" />
+
+            <TextView
+                android:id="@+id/tvData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="19/10/2025"
+                android:textColor="#707070"
+                android:textSize="13sp"/>
+
+        </LinearLayout>
+
+        <!-- Valor da mensuração (direita) -->
+        <TextView
+            android:id="@+id/tvExcursao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:paddingVertical="6dp"
+            android:paddingHorizontal="12dp"
+            android:text="100º"
+            android:textColor="#1B4D2F"
             android:textStyle="bold"
-            android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnAnalise"
-            android:layout_marginEnd="8dp"/>
+            android:textSize="15sp"
+            android:background="@drawable/bg_valor_chip"/>
 
-        <!-- Botão Ação -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAnalise"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Analisar"
-            app:icon="@drawable/ic_round_insights_24"
-            app:iconPadding="8dp"
-            app:iconGravity="textStart"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <!-- Linha 2: Articulação (Movimento) + Chip de Lado -->
-        <TextView
-            android:id="@+id/tvArticulacaoMov"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Joelho (Flexão)"
-            android:textSize="14sp"
-            android:alpha="0.95"
-            app:layout_constraintTop_toBottomOf="@id/tvPaciente"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/chipLado"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="8dp"/>
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipLado"
-            style="@style/Widget.Material3.Chip.Assist.Elevated"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="D"
-            app:chipIcon="@drawable/ic_round_accessibility_new_24"
-            app:chipIconTint="?attr/colorOnSurfaceVariant"
-            app:layout_constraintTop_toBottomOf="@id/tvPaciente"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp"/>
-
-        <!-- Linha 3: Posição (Chip) -->
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipPosicao"
-            style="@style/Widget.Material3.Chip.Assist.Elevated"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Posição: Normal"
-            app:chipIcon="@drawable/ic_round_accessibility_new_24"
-            app:chipIconTint="?attr/colorOnSurfaceVariant"
-            app:layout_constraintTop_toBottomOf="@id/tvArticulacaoMov"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="8dp"/>
-
-        <!-- Linha 4: Metadados (ID + Repetições) -->
-        <TextView
-            android:id="@+id/tvMeta"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Repetições: 0"
-            android:textSize="12sp"
-            android:alpha="0.8"
-            app:layout_constraintTop_toBottomOf="@id/chipPosicao"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="2dp"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -25,8 +25,7 @@ public interface ApiService {
     @GET("api/mensuracoes")
     Call<PagedResponse<MensuracaoDTO>> getMensuracoes(
             @Header("Authorization") String token,
-            @Query("pacienteNome") String pacienteNome,
-            @Query("articulacao") String articulacao,
+            @Query("valorBusca") String valorBusca,
             @Query("page") Integer page,
             @Query("size") Integer size
     );
@@ -37,6 +36,12 @@ public interface ApiService {
             @Query("pacienteNome") String pacienteNome,        // opcional
             @Query("page") Integer page,                 // se usar paginação
             @Query("size") Integer size
+    );
+
+    @GET("api/paciente/{id}")
+    Call<PacienteDTO> getPaciente(
+            @Header("Authorization") String token,
+            @Path("id") int id
     );
 
     @GET("api/mensuracoes/{id}/analise")

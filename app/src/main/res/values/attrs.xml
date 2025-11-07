@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AngleGaugeView">
+        <attr name="maxAngle" format="integer" />        <!-- padrão 180 -->
+        <attr name="ringWidth" format="dimension" />     <!-- padrão 18dp -->
+        <attr name="trackColor" format="color" />        <!-- cinza do fundo -->
+        <attr name="progressColor" format="color" />     <!-- azul do arco -->
+        <attr name="startAtTop" format="boolean" />      <!-- true = inicia 12h -->
+    </declare-styleable>
+</resources>
